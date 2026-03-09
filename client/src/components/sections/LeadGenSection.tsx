@@ -47,7 +47,7 @@ export const LeadGenSection = ({ onComplete }: LeadGenSectionProps) => {
                             transition={{ duration: 0.3 }}
                             className="space-y-4"
                         >
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
                                     <label className="text-[11px] font-medium text-[#888] pl-1">First Name</label>
                                     <div className="relative">
