@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-brand-primary: #0D5C46;
+  /* Deep Forest Green for backgrounds/primary buttons */
+  --color-brand-secondary: #0A4A38;
+  /* Dark green for hover states */
+  --color-brand-accent: #E8F3F0;
+  /* Light Green surface for active items */
+  --color-brand-dark: #111827;
+  /* Darkest shade for text overlap */
+
+  --color-background-main: #F8FAFC;
+  /* Light Slate/Gray background for the dashboard body */
+  --color-background-card: #FFFFFF;
+  /* Pure White for cards/forms */
+  --color-background-alt: #F1F5F9;
+  /* Slightly darker slate for alternate sections/borders */
+
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  /* Subtle slate gray for less importance */
+  --color-text-inverse: #ffffff;
+
+  /* FITZONE specific dark darks */
+  --color-dark-bg: #09090B; /* Deep darker zinc for background */
+  --color-dark-card: #18181B; /* Slightly lighter zinc for cards */
+  --color-dark-border: #27272A; /* Subtle zinc border */
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+  /* Assuming we will add Playfair Display to layout.tsx */
+}
+
+:root {
+  --background: var(--color-background-main);
+  --foreground: var(--color-text-primary);
+}
+
+
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utilities for Glassmorphism & Premium UI */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.glass-dark {
+  background: rgba(18, 28, 34, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Lenis Recommended CSS */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}

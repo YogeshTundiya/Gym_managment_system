@@ -1,0 +1,28 @@
+
+> client@0.1.0 lint
+> eslint
+
+
+/home/yogesh/Documents/myproject/gym_managment_system/client/src/app/not-found.tsx
+  21:37  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  21:58  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  21:89  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/home/yogesh/Documents/myproject/gym_managment_system/client/src/app/page.tsx
+  333:36  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  387:70  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/home/yogesh/Documents/myproject/gym_managment_system/client/src/app/register/page.tsx
+  25:23  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/home/yogesh/Documents/myproject/gym_managment_system/client/src/components/forms/WaiverForm.tsx
+  195:188  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  195:194  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  195:412  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  195:422  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+/home/yogesh/Documents/myproject/gym_managment_system/client/src/components/providers/SmoothScrolling.tsx
+  12:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 11 problems (11 errors, 0 warnings)
+
