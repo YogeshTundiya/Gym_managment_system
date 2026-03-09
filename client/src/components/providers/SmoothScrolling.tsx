@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactLenis } from "@studio-freight/react-lenis";
+import { ReactLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
