@@ -63,8 +63,8 @@ export default function Home() {
         </div>
 
         {/* Text */}
-        <div className="splash-text relative z-10 text-white text-3xl md:text-4xl font-bold tracking-[0.3em] pointer-events-none">
-          E L I T E   A T H L E T I C
+        <div className="splash-text relative z-10 text-white text-3xl sm:text-4xl md:text-5xl font-bold tracking-[0.3em] sm:tracking-[0.4em] pointer-events-none text-center px-4">
+          FITZONE
         </div>
       </div>
 

@@ -8,7 +8,7 @@ export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <nav className="w-full bg-background-main/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 flex flex-col">
+        <nav className="w-full bg-background-main/80 backdrop-blur-md sticky top-0 z-[100] border-b border-gray-100 flex flex-col relative">
             <div className="px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <div className="w-10 h-10 bg-[#CCA028] rounded-xl flex items-center justify-center text-[#0F2E23]">
@@ -52,7 +52,7 @@ export const Navbar = () => {
 
             {/* Mobile Dropdown Menu */}
             {isMenuOpen && (
-                <div className="md:hidden flex flex-col px-6 py-4 bg-white border-t border-gray-100 shadow-lg absolute top-full left-0 w-full animate-in fade-in slide-in-from-top-2">
+                <div className="md:hidden flex flex-col px-6 py-4 bg-white border-t border-gray-100 shadow-lg absolute top-full left-0 w-full z-[200]">
                     <Link 
                         href="/register" 
                         onClick={() => setIsMenuOpen(false)}
