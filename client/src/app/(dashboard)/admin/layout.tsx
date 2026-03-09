@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { LayoutDashboard, Users, CreditCard, Activity, Settings, LogOut, MessageSquare, Plus, QrCode, PanelRightClose, PanelRightOpen, Moon, Sun, Menu, Bell } from "lucide-react";
+import { LayoutDashboard, Users, CreditCard, Activity, Settings, LogOut, MessageSquare, Plus, QrCode, PanelRightClose, PanelRightOpen, Moon, Sun, Menu, Bell, X } from "lucide-react";
 
 export default function AdminLayout({
     children,
@@ -106,6 +106,80 @@ export default function AdminLayout({
                     </Link>
                 </div>
             </aside>
+
+            {/* Mobile Sidebar Overlay */}
+            {isMobileMenuOpen && (
+                <div className="fixed inset-0 z-50 lg:hidden">
+                    {/* Backdrop */}
+                    <div 
+                        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                    {/* Sidebar */}
+                    <aside className="fixed top-0 left-0 w-72 h-full bg-white dark:bg-dark-bg border-r border-gray-200 dark:border-dark-border flex flex-col shadow-2xl">
+                        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100 dark:border-dark-border">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-lg bg-brand-primary flex flex-shrink-0 items-center justify-center text-white font-bold">
+                                    G
+                                </div>
+                                <span className="font-serif text-lg font-bold text-gray-900 dark:text-white">FITZONE</span>
+                            </div>
+                            <button
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-card transition-colors"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto py-6 px-3 flex flex-col gap-1">
+                            <div className="px-3 mb-2 text-xs font-bold tracking-wider text-gray-400 dark:text-gray-500">MENU</div>
+                            <button className="w-full py-2.5 bg-brand-primary hover:bg-brand-secondary text-white font-medium rounded-xl flex items-center justify-center gap-2 transition-colors">
+                                <Plus size={18} className="min-w-[18px]" />
+                                <span>New Inquiry</span>
+                            </button>
+
+                            {navigation.map((item) => {
+                                const isActive = pathname === item.href;
+                                return (
+                                    <Link
+                                        key={item.name}
+                                        href={item.href}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${isActive
+                                            ? "bg-brand-accent text-brand-primary dark:bg-brand-primary/20 dark:text-brand-accent"
+                                            : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
+                                            }`}
+                                    >
+                                        <item.icon className={`w-5 h-5 min-w-[20px] ${isActive ? "text-brand-primary dark:text-brand-accent" : "text-gray-400"}`} />
+                                        <span>{item.name}</span>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+
+                        <div className="p-4 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 flex flex-col gap-2">
+                            {mounted && (
+                                <button
+                                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                >
+                                    {theme === 'dark' ? <Sun className="w-5 h-5 min-w-[20px]" /> : <Moon className="w-5 h-5 min-w-[20px]" />}
+                                    <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                                </button>
+                            )}
+                            <Link
+                                href="/portal"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                            >
+                                <LogOut className="w-5 h-5 min-w-[20px]" />
+                                <span>Sign Out</span>
+                            </Link>
+                        </div>
+                    </aside>
+                </div>
+            )}
 
             {/* Main Content Area */}
             <div className={`transition-all duration-300 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-64'} min-h-screen w-full`}>
