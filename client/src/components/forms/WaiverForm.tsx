@@ -2,30 +2,25 @@
 
 import React, { useRef, useState } from "react";
 import SignatureCanvas from "react-signature-canvas";
+import { Check, Edit3, ShieldAlert } from "lucide-react";
 
 const PARQ_QUESTIONS = [
-    "Has your doctor ever said that you have a heart condition and that you should only do physical activity recommended by a doctor?",
+    "Has your doctor ever said that you have a heart condition?",
     "Do you feel pain in your chest when you do physical activity?",
-    "In the past month, have you had chest pain when you were not doing physical activity?",
-    "Do you lose your balance because of dizziness or do you ever lose consciousness?",
-    "Do you have a bone or joint problem that could be made worse by a change in your physical activity?",
+    "In the past month, have you had chest pain when you were not active?",
+    "Do you lose your balance because of dizziness or lose consciousness?",
+    "Do you have a bone or joint problem that could be made worse?",
 ];
 
-export const WaiverForm = () => {
+interface WaiverFormProps {
+    onComplete?: () => void;
+}
+
+export const WaiverForm = ({ onComplete }: WaiverFormProps) => {
     const sigCanvas = useRef<SignatureCanvas>(null);
-
-    const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-    });
-
-    // Array of booleans or null (unanswered)
     const [parqAnswers, setParqAnswers] = useState<(boolean | null)[]>(
         Array(PARQ_QUESTIONS.length).fill(null)
     );
-
     const [agreedToTerms, setAgreedToTerms] = useState(false);
 
     const clearSignature = () => {
@@ -53,209 +48,134 @@ export const WaiverForm = () => {
             return;
         }
 
-        // Check if any parq answer is "Yes" (true)
         const needsClearance = parqAnswers.some(ans => ans === true);
 
         if (needsClearance) {
             alert("Based on your answers, you may need medical clearance before participating. A coach will contact you.");
         } else {
             alert("Registration complete! Welcome to FITZONE.");
+            if(onComplete) onComplete();
         }
-
-        // Reset flow mock
-        setFormData({ firstName: "", lastName: "", email: "", phone: "" });
-        setParqAnswers(Array(PARQ_QUESTIONS.length).fill(null));
-        setAgreedToTerms(false);
-        clearSignature();
     };
 
     return (
-        <section className="st-section w-full bg-[#f4f5f6] py-20 px-4 md:px-6">
-            <div className="max-w-3xl mx-auto">
+        <div className="w-full">
+            <div className="text-center mb-8">
+                <h2 className="text-2xl font-semibold text-white mb-2">Step 2: Medical & Waiver</h2>
+                <p className="text-[#888888] text-sm">Please complete your health screening and provide a digital signature.</p>
+            </div>
 
-                {/* Header */}
-                <div className="text-center mb-10">
-                    <div className="w-16 h-16 rounded-full bg-[#0F2E23] mx-auto flex items-center justify-center mb-6 shadow-xl">
-                        <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
+            <form onSubmit={handleSubmit} className="space-y-8">
+
+                {/* Section 1: PAR-Q */}
+                <div className="bg-[#141414] rounded-2xl p-6 border border-white/5 shadow-sm">
+                    <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+                        <div className="w-8 h-8 rounded-full bg-[#0D5C46]/20 flex items-center justify-center text-[#0D5C46]">
+                            <ShieldAlert size={16} />
+                        </div>
+                        <h3 className="text-sm font-bold text-white uppercase tracking-wider">Physical Readiness (PAR-Q)</h3>
                     </div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-[#121c22] mb-3">Guest Registration</h2>
-                    <p className="text-[#64748b]">Please complete the following health screening and waiver to begin your trial.</p>
+
+                    <div className="space-y-4">
+                        {PARQ_QUESTIONS.map((question, index) => (
+                            <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-white/5 border border-transparent hover:border-white/5 transition-colors">
+                                <p className="text-[#A2C7B8] text-xs sm:text-sm sm:pr-4 flex-1">
+                                    {question}
+                                </p>
+                                <div className="flex bg-[#1a1a1a] rounded-lg p-1 border border-[#333] shrink-0">
+                                    <button
+                                        type="button"
+                                        onClick={() => setAnswer(index, true)}
+                                        className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all ${parqAnswers[index] === true
+                                            ? "bg-[#0D5C46] text-white shadow-md"
+                                            : "text-[#888] hover:text-white"
+                                            }`}
+                                    >
+                                        Yes
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setAnswer(index, false)}
+                                        className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all ${parqAnswers[index] === false
+                                            ? "bg-white/10 text-white shadow-md"
+                                            : "text-[#888] hover:text-white"
+                                            }`}
+                                    >
+                                        No
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-
-                    {/* Section 1: Personal Details */}
-                    <div className="bg-background-card rounded-2xl md:rounded-[32px] p-6 md:p-10 shadow-sm border border-gray-100">
-                        <div className="flex items-center gap-3 mb-8">
-                            <svg className="w-5 h-5 text-[#0F2E23]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            <h3 className="text-xl font-bold text-[#121c22]">Personal Details</h3>
+                {/* Section 2: Waiver & Signature */}
+                <div className="bg-[#141414] rounded-2xl p-6 border border-white/5 shadow-sm">
+                    <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+                        <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white">
+                            <Edit3 size={16} />
                         </div>
+                        <h3 className="text-sm font-bold text-white uppercase tracking-wider">Release & Signature</h3>
+                    </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold text-[#121c22] mb-2">First Name</label>
-                                <input
-                                    type="text" required placeholder="Jane"
-                                    className="w-full bg-background-card border border-gray-200 focus:border-[#0F2E23] rounded-xl px-4 py-3 outline-none transition-colors"
-                                    value={formData.firstName} onChange={e => setFormData({ ...formData, firstName: e.target.value })}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-[#121c22] mb-2">Last Name</label>
-                                <input
-                                    type="text" required placeholder="Doe"
-                                    className="w-full bg-background-card border border-gray-200 focus:border-[#0F2E23] rounded-xl px-4 py-3 outline-none transition-colors"
-                                    value={formData.lastName} onChange={e => setFormData({ ...formData, lastName: e.target.value })}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-[#121c22] mb-2">Email Address</label>
-                                <input
-                                    type="email" required placeholder="jane.doe@example.com"
-                                    className="w-full bg-background-card border border-gray-200 focus:border-[#0F2E23] rounded-xl px-4 py-3 outline-none transition-colors"
-                                    value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-[#121c22] mb-2">Phone Number</label>
-                                <input
-                                    type="tel" required placeholder="+1 (555) 000-0000"
-                                    className="w-full bg-background-card border border-gray-200 focus:border-[#0F2E23] rounded-xl px-4 py-3 outline-none transition-colors"
-                                    value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                />
-                            </div>
+                    <div className="bg-[#1a1a1a] p-4 rounded-xl mb-6 border border-[#222]">
+                        <div className="h-28 overflow-y-auto text-xs text-[#666] leading-relaxed pr-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                            In consideration of being permitted to participate in any way in the activities and programs offered by FITZONE, I, for myself, my personal representatives, heirs, and next of kin:
+                            <br /><br />
+                            1. Acknowledge, agree, and represent that I understand the nature of High Intensity Training and related fitness activities and that I am qualified, in good health, and in proper physical condition to participate in such Activity.
+                            <br /><br />
+                            2. Fully understand that: (a) FITNESS ACTIVITIES INVOLVE RISKS AND DANGERS OF SERIOUS BODILY INJURY, INCLUDING PERMANENT DISABILITY, PARALYSIS, AND DEATH ("RISKS"); (b) these Risks and dangers may be caused by my own actions or inactions, the actions or inactions of others participating in the Activity, the condition in which the Activity takes place, or THE NEGLIGENCE OF THE "RELEASEES" NAMED BELOW.
                         </div>
                     </div>
 
-                    {/* Section 2: PAR-Q */}
-                    <div className="bg-background-card rounded-2xl md:rounded-[32px] p-6 md:p-10 shadow-sm border border-gray-100">
-                        <div className="flex items-center gap-3 mb-4">
-                            <svg className="w-5 h-5 text-[#0F2E23]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                            <h3 className="text-xl font-bold text-[#121c22]">Physical Activity Readiness (PAR-Q)</h3>
+                    <label className="flex items-center gap-4 cursor-pointer mb-6 group bg-white/5 p-4 rounded-xl border border-transparent hover:border-white/10 transition-colors">
+                        <div className="relative flex items-center justify-center shrink-0">
+                            <input
+                                type="checkbox" className="peer sr-only"
+                                checked={agreedToTerms}
+                                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                            />
+                            <div className="w-5 h-5 rounded border border-[#555] peer-checked:bg-[#0D5C46] peer-checked:border-[#0D5C46] transition-all flex items-center justify-center group-hover:border-white">
+                                <Check size={12} className={`text-white transition-transform ${agreedToTerms ? 'scale-100' : 'scale-0'}`} />
+                            </div>
                         </div>
-                        <p className="text-sm text-[#64748b] mb-8 pb-6 border-b border-gray-100">
-                            Please answer the following questions honestly to ensure your safety during physical activity.
-                        </p>
+                        <span className="text-[#A2C7B8] text-xs font-medium">
+                            I have read, understood and agree to the terms of the Trial Waiver & Release Form.
+                        </span>
+                    </label>
 
-                        <div className="space-y-6">
-                            {PARQ_QUESTIONS.map((question, index) => (
-                                <div key={index} className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-gray-50 last:border-0 last:pb-0">
-                                    <p className="text-[#121c22] text-sm md:pr-8 flex-1 leading-relaxed">
-                                        {question}
-                                    </p>
-                                    <div className="flex items-center gap-2 shrink-0">
-                                        <button
-                                            type="button"
-                                            onClick={() => setAnswer(index, true)}
-                                            className={`px-6 py-2 rounded-lg text-sm font-semibold transition-colors border ${parqAnswers[index] === true
-                                                ? "bg-[#0F2E23] border-[#0F2E23] text-white"
-                                                : "bg-background-card border-gray-200 text-[#475569] hover:border-[#0F2E23]"
-                                                }`}
-                                        >
-                                            Yes
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setAnswer(index, false)}
-                                            className={`px-6 py-2 rounded-lg text-sm font-semibold transition-colors border ${parqAnswers[index] === false
-                                                ? "bg-[#0F2E23] border-[#0F2E23] text-white"
-                                                : "bg-background-card border-gray-200 text-[#475569] hover:border-[#0F2E23]"
-                                                }`}
-                                        >
-                                            No
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
+                    <div className="relative">
+                        <div className="border border-dashed border-[#444] rounded-xl relative bg-[#1a1a1a] overflow-hidden group hover:border-[#666] transition-colors">
+                            <SignatureCanvas
+                                ref={sigCanvas}
+                                penColor="#ffffff"
+                                canvasProps={{ className: 'signature-canvas w-full h-40 cursor-crosshair touch-none' }}
+                            />
+
+                            <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center opacity-30 group-focus-within:opacity-0 transition-opacity">
+                                <span className="text-xs font-semibold tracking-widest uppercase text-[#888]">Sign Here</span>
+                            </div>
                         </div>
+
+                        <button
+                            type="button"
+                            onClick={clearSignature}
+                            className="absolute bottom-2 right-2 text-[10px] font-bold tracking-wider text-[#888] hover:text-white uppercase z-10 bg-[#222] hover:bg-[#333] px-3 py-1.5 rounded transition-colors"
+                        >
+                            Clear
+                        </button>
                     </div>
 
-                    {/* Section 3: Waiver & Signature */}
-                    <div className="bg-background-card rounded-2xl md:rounded-[32px] p-6 md:p-10 shadow-sm border border-gray-100">
-                        <div className="flex items-center gap-3 mb-6">
-                            <svg className="w-5 h-5 text-[#0F2E23]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                            </svg>
-                            <h3 className="text-xl font-bold text-[#121c22]">Trial Waiver & Release</h3>
-                        </div>
+                </div>
 
-                        <div className="bg-[#f8fafc] p-6 rounded-2xl mb-8">
-                            <h4 className="font-bold text-xs text-[#475569] mb-4 tracking-wider uppercase">Assumption of Risk, Release and Waiver of Liability</h4>
-                            <div className="h-32 overflow-y-auto text-xs text-[#64748b] leading-relaxed pr-4 custom-scrollbar">
-                                In consideration of being permitted to participate in any way in the activities and programs offered by FITZONE, I, for myself, my personal representatives, heirs, and next of kin:
-                                <br /><br />
-                                1. Acknowledge, agree, and represent that I understand the nature of High Intensity Training and related fitness activities and that I am qualified, in good health, and in proper physical condition to participate in such Activity.
-                                <br /><br />
-                                2. Fully understand that: (a) FITNESS ACTIVITIES INVOLVE RISKS AND DANGERS OF SERIOUS BODILY INJURY, INCLUDING PERMANENT DISABILITY, PARALYSIS, AND DEATH (&quot;RISKS&quot;); (b) these Risks and dangers may be caused by my own actions or inactions, the actions or inactions of others participating in the Activity, the condition in which the Activity takes place, or THE NEGLIGENCE OF THE &quot;RELEASEES&quot; NAMED BELOW.
-                            </div>
-                        </div>
-
-                        <label className="flex items-start gap-4 cursor-pointer mb-8 group">
-                            <div className="relative flex items-center justify-center mt-1">
-                                <input
-                                    type="checkbox"
-                                    className="peer sr-only"
-                                    checked={agreedToTerms}
-                                    onChange={(e) => setAgreedToTerms(e.target.checked)}
-                                />
-                                <div className="w-6 h-6 rounded border-2 border-gray-300 peer-checked:bg-[#0F2E23] peer-checked:border-[#0F2E23] transition-colors flex items-center justify-center group-hover:border-[#0F2E23]">
-                                    <svg className={`w-4 h-4 text-white ${agreedToTerms ? 'block' : 'hidden'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <span className="text-[#475569] text-sm leading-relaxed pt-1">
-                                I have read, understood and agree to the terms of the Trial Waiver & Release Form.
-                            </span>
-                        </label>
-
-                        <div>
-                            <label className="block text-sm font-semibold text-[#121c22] mb-4">Digital Signature</label>
-                            <div className="border-2 border-dashed border-gray-200 rounded-2xl relative bg-background-card overflow-hidden group">
-                                <SignatureCanvas
-                                    ref={sigCanvas}
-                                    penColor="#121c22"
-                                    canvasProps={{ className: 'signature-canvas w-full h-48 cursor-crosshair touch-none' }}
-                                />
-
-                                <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center opacity-30 group-focus-within:opacity-0 transition-opacity">
-                                    <svg className="w-6 h-6 text-slate-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                    </svg>
-                                    <span className="text-sm font-medium text-slate-500">Sign here with your mouse or touch screen</span>
-                                </div>
-
-                                <button
-                                    type="button"
-                                    onClick={clearSignature}
-                                    className="absolute bottom-4 right-4 text-[10px] font-bold tracking-widest text-[#64748b] hover:text-[#121c22] uppercase z-10 bg-white/80 px-2 py-1 rounded"
-                                >
-                                    Clear Signature
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="w-full py-5 bg-[#0F2E23] text-white rounded-2xl font-bold text-lg hover:bg-[#0A1F17] transition-all flex items-center justify-center gap-2 shadow-lg"
-                    >
+                <div className="flex gap-4 pt-4">
+                    <button type="submit" className="w-full h-14 bg-[#0D5C46] hover:bg-[#0A4A38] text-white rounded-xl font-bold tracking-wide transition-all text-sm shadow-[0_0_20px_rgba(13,92,70,0.4)] hover:shadow-[0_0_30px_rgba(13,92,70,0.6)] flex items-center justify-center gap-2">
+                        <Check size={18} />
                         Complete Registration
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
                     </button>
+                </div>
 
-                </form>
-
-            </div>
-        </section>
+            </form>
+        </div>
     );
 };
