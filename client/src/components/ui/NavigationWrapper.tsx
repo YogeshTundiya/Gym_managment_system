@@ -7,18 +7,18 @@ import { Footer } from "@/components/ui/Footer";
 export const NavigationWrapper = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
 
-    // Hide navbar and footer on dashboard and portal pages
-    const isDashboardOrPortal = pathname?.startsWith('/admin') ||
+    // Hide navbar and footer on specific pages (dashboard, portal)
+    const hideNavAndFooter = pathname?.startsWith('/admin') ||
         pathname?.startsWith('/client') ||
         pathname?.startsWith('/portal');
 
     return (
         <>
-            {!isDashboardOrPortal && <Navbar />}
-            <div className={!isDashboardOrPortal ? "min-h-[calc(100vh-200px)]" : ""}>
+            {!hideNavAndFooter && <Navbar />}
+            <div className={!hideNavAndFooter ? "min-h-[calc(100vh-200px)]" : ""}>
                 {children}
             </div>
-            {!isDashboardOrPortal && <Footer />}
+            {!hideNavAndFooter && <Footer />}
         </>
     );
 };
